@@ -42,15 +42,20 @@ public class WatchedPlayers {
     public void removeWatcher(UUID target, UUID watcher) {
         watcherTargetMap.remove(watcher);
         targetWatcherMap.remove(target, watcher);
-        
+
         Optional.ofNullable(Bukkit.getPlayer(watcher)).ifPresent(player -> {
             Player targetPlayer = Bukkit.getPlayer(target);
-            
+
             String targetName = Util.trWithPrefix("general.target.not.online");
-            if(targetPlayer != null) {
+            if (targetPlayer != null) {
                 targetName = targetPlayer.getDisplayName();
             }
-            player.sendMessage(Util.trWithPrefix("general.status.stopped.watching", targetName));
+            {
+                // do not send the message if it is an empty one
+                if (!Util.tr("general.status.stopped.watching", targetName).trim().isEmpty()) {
+                    player.sendMessage(Util.trWithPrefix("general.status.stopped.watching", targetName));
+                }
+            }
         });
     }
 
