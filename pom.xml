@@ -80,12 +80,12 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>me.ialistannen</groupId>
-            <artifactId>MiniNBT</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>me.ialistannen</groupId>-->
+            <!--<artifactId>MiniNBT</artifactId>-->
+            <!--<version>1.0-SNAPSHOT</version>-->
+            <!--<scope>compile</scope>-->
+        <!--</dependency>-->
         
         <dependency>
             <groupId>org.bukkit</groupId>

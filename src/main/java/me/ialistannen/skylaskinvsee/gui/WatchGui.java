@@ -28,6 +28,7 @@ public class WatchGui extends Gui {
     public WatchGui(String name, Player target, boolean modifiable) {
         super(name, 5, new AnchorPane(9, 5));
 
+        this.modifiable = modifiable;
         targetPlayer = target.getUniqueId();
 
         PlayerInventoryPane pane = new PlayerInventoryPane(targetPlayer, target.getInventory());
