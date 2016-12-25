@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -57,10 +58,10 @@ public class WatchGuiManager implements Listener {
      */
     public void closeAll() {
         List<Player> players = watchGuiMap.keySet()
-                  .stream()
-                  .map(Bukkit::getPlayer)
-                  .filter(Objects::nonNull)
-                  .collect(Collectors.toList());
+                .stream()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
         players.forEach(HumanEntity::closeInventory);
     }
@@ -85,13 +86,23 @@ public class WatchGuiManager implements Listener {
 
     @EventHandler
     public void onTargetUpdateInventory(InventoryClickEvent event) {
+        System.out.println("Slot: " + event.getSlot());
+        updateWatchers(event.getWhoClicked());
+    }
+
+    @EventHandler
+    public void onTargetUpdateInventoryDrag(InventoryDragEvent event) {
+        updateWatchers(event.getWhoClicked());
+    }
+
+    private void updateWatchers(HumanEntity target) {
         WatchedPlayers players = SkylaskInvsee.getInstance().getWatchedPlayers();
 
-        if (!isPlayerAndWatched(event.getWhoClicked(), players)) {
+        if (!isPlayerAndWatched(target, players)) {
             return;
         }
 
-        UUID playerUUID = event.getWhoClicked().getUniqueId();
+        UUID playerUUID = target.getUniqueId();
 
         new BukkitRunnable() {
             @Override
@@ -100,7 +111,8 @@ public class WatchGuiManager implements Listener {
             }
         }.runTask(SkylaskInvsee.getInstance());
     }
-    
+
+
     @EventHandler
     public void onTargetEquipArmor(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_AIR) {
@@ -120,13 +132,11 @@ public class WatchGuiManager implements Listener {
         Material type = event.getItem().getType();
         String typeName = type.name();
 
-        if (typeName.contains("CHESTPLATE") || typeName.contains("LEGGINGS") || typeName.contains("HELMET") || typeName.contains("BOOTS")) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    players.getWatcher(event.getPlayer().getUniqueId()).forEach(WatchGuiManager.this::updateWatchGui);
-                }
-            }.runTask(SkylaskInvsee.getInstance());
+        if (typeName.contains("CHESTPLATE")
+                || typeName.contains("LEGGINGS")
+                || typeName.contains("HELMET")
+                || typeName.contains("BOOTS")) {
+            updateWatchers(event.getPlayer());
         }
     }
 
@@ -142,7 +152,7 @@ public class WatchGuiManager implements Listener {
             @Override
             public void run() {
                 watchedPlayers.getWatcher(event.getPlayer().getUniqueId())
-                          .forEach(WatchGuiManager.this::updateWatchGui);
+                        .forEach(WatchGuiManager.this::updateWatchGui);
             }
         }.runTask(SkylaskInvsee.getInstance());
     }

@@ -11,22 +11,22 @@ import com.perceivedev.perceivecore.command.DefaultCommandExecutor;
 import com.perceivedev.perceivecore.command.DefaultTabCompleter;
 import com.perceivedev.perceivecore.language.I18N;
 import com.perceivedev.perceivecore.language.MessageProvider;
-import com.perceivedev.perceivecore.other.DisableManager;
+import com.perceivedev.perceivecore.util.DisableManager;
 
 import me.ialistannen.skylaskinvsee.commands.CommandInvsee;
 import me.ialistannen.skylaskinvsee.manager.WatchGuiManager;
 import me.ialistannen.skylaskinvsee.manager.WatchedPlayers;
-import me.ialistannen.skylaskinvsee.packet.PacketInjectListener;
+import me.ialistannen.skylaskinvsee.packet.DragListener;
 
 public class SkylaskInvsee extends JavaPlugin {
 
     private static SkylaskInvsee instance;
 
-    private DisableManager  disableManager;
+    private DisableManager disableManager;
     private MessageProvider language;
 
     private WatchGuiManager watchGuiManager;
-    private WatchedPlayers  watchedPlayers;
+    private WatchedPlayers watchedPlayers;
 
     public void onEnable() {
         instance = this;
@@ -42,9 +42,8 @@ public class SkylaskInvsee extends JavaPlugin {
         watchGuiManager = new WatchGuiManager();
         watchedPlayers = new WatchedPlayers();
 
-        PacketInjectListener packetInjectListener = new PacketInjectListener();
-        packetInjectListener.injectAll(Bukkit.getOnlinePlayers());
-        Bukkit.getPluginManager().registerEvents(packetInjectListener, this);
+        DragListener dragListener = new DragListener();
+        Bukkit.getPluginManager().registerEvents(dragListener, this);
     }
 
     private void reload() {

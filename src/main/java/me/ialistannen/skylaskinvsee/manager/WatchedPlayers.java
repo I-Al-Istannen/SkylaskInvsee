@@ -19,7 +19,7 @@ import me.ialistannen.skylaskinvsee.util.Util;
  */
 public class WatchedPlayers {
 
-    private Map<UUID, UUID>      watcherTargetMap = new HashMap<>();
+    private Map<UUID, UUID> watcherTargetMap = new HashMap<>();
     private Multimap<UUID, UUID> targetWatcherMap = HashMultimap.create();
 
     /**
@@ -65,7 +65,7 @@ public class WatchedPlayers {
      * @return True if this player is being watched
      */
     public boolean isBeingWatched(UUID target) {
-        return targetWatcherMap.containsKey(target);
+        return targetWatcherMap.containsKey(target) && !targetWatcherMap.get(target).isEmpty();
     }
 
     /**

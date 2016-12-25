@@ -22,7 +22,7 @@ public class WatchGui extends Gui {
 
     private final int ID = counter++;
 
-    private UUID    targetPlayer;
+    private UUID targetPlayer;
     private boolean modifiable;
 
     public WatchGui(String name, Player target, boolean modifiable) {
@@ -37,7 +37,8 @@ public class WatchGui extends Gui {
         PlayerArmorOffhandPane miscPane = new PlayerArmorOffhandPane(targetPlayer, target.getInventory());
         getRootAsFixedPosition().addComponent(miscPane, 0, 0);
 
-        PlayerCraftingPane craftingPane = new PlayerCraftingPane(targetPlayer, target.getOpenInventory().getTopInventory());
+        PlayerCraftingPane craftingPane = new PlayerCraftingPane(targetPlayer, target.getOpenInventory()
+                .getTopInventory());
         getRootAsFixedPosition().addComponent(craftingPane, 5, 0);
     }
 
@@ -85,12 +86,15 @@ public class WatchGui extends Gui {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (!(o instanceof WatchGui))
+        }
+        if (!(o instanceof WatchGui)) {
             return false;
-        if (!super.equals(o))
+        }
+        if (!super.equals(o)) {
             return false;
+        }
         WatchGui watchGui = (WatchGui) o;
         return ID == watchGui.ID;
     }

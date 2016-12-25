@@ -2,6 +2,7 @@ package me.ialistannen.skylaskinvsee.gui;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -10,10 +11,13 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.perceivedev.perceivecore.gui.ClickEvent;
 import com.perceivedev.perceivecore.gui.base.Component;
 import com.perceivedev.perceivecore.gui.components.Button;
 import com.perceivedev.perceivecore.gui.components.Label;
@@ -22,6 +26,7 @@ import com.perceivedev.perceivecore.gui.util.Dimension;
 import com.perceivedev.perceivecore.util.ItemFactory;
 
 import me.ialistannen.skylaskinvsee.SkylaskInvsee;
+import me.ialistannen.skylaskinvsee.packet.DragClickEvent;
 
 /**
  * A Pane that holds items from the player's inventory
@@ -29,7 +34,7 @@ import me.ialistannen.skylaskinvsee.SkylaskInvsee;
 class PlayerInventoryPartPane extends AnchorPane {
 
     final Inventory inventory;
-    final UUID      playerID;
+    final UUID playerID;
 
     PlayerInventoryPartPane(int width, int height, UUID playerUUID, Inventory inventory) {
         super(width, height);
@@ -102,6 +107,11 @@ class PlayerInventoryPartPane extends AnchorPane {
                 return;
             }
 
+            if (raw instanceof DragClickEvent) {
+                handleDrag(clickEvent, ((DragClickEvent) raw).getDragEvent(), button);
+                return;
+            }
+
             if (raw.getClick() == ClickType.MIDDLE) {
                 // only works in creative
                 if (clickEvent.getPlayer().getGameMode() != GameMode.CREATIVE) {
@@ -129,8 +139,11 @@ class PlayerInventoryPartPane extends AnchorPane {
 
                 // picked up half
                 if (clickEvent.getClickType() == ClickType.RIGHT) {
-                    inventory.setItem(slot, ItemFactory.builder(currentItem).setAmount(currentItem.getAmount() / 2).build());
-                } else {
+                    inventory.setItem(slot, ItemFactory.builder(currentItem)
+                            .setAmount(currentItem.getAmount() / 2)
+                            .build());
+                }
+                else {
                     // picked up all
                     inventory.setItem(slot, null);
                 }
@@ -183,7 +196,8 @@ class PlayerInventoryPartPane extends AnchorPane {
                     cursor.setAmount(newAmount - currentItem.getType().getMaxStackSize());
                     currentItem.setAmount(currentItem.getType().getMaxStackSize());
                     inventory.setItem(slot, currentItem);
-                } else {
+                }
+                else {
                     currentItem.setAmount(newAmount);
                     cursor.setAmount(0);
                     new BukkitRunnable() {
@@ -205,6 +219,72 @@ class PlayerInventoryPartPane extends AnchorPane {
         return button;
     }
 
+    private void handleDrag(ClickEvent clickEvent, InventoryDragEvent event, Button button) {
+        InventoryView inventoryView = event.getView();
+
+        // only in his inventory
+        if (!isInTopInv(
+                event.getRawSlots().stream()
+                        .mapToInt(Integer::intValue)
+                        .min()
+                        .orElse(-1) // outside the inventory is this for example
+                , inventoryView)) {
+            clickEvent.setCancelled(false);
+            return;
+        }
+
+        // any click in a blocked slot
+        boolean cancel = false;
+        for (int rawSlot : event.getRawSlots()) {
+            if (rawSlot >= 5 && rawSlot <= 8) {     // offhand and crafting
+                cancel = true;
+            }
+        }
+        if (cancel) {
+            clickEvent.setCancelled(true);
+            return;
+        }
+
+        for (Entry<Integer, ItemStack> entry : event.getNewItems().entrySet()) {
+            ItemStack current = inventoryView.getItem(entry.getKey());
+
+            if (current == null || current.getType() == Material.AIR) {
+                inventory.setItem(translateSlot(entry.getKey()), entry.getValue());
+                continue;
+            }
+
+            if (current.isSimilar(entry.getValue())) {
+                int totalAmount = current.getAmount() + entry.getValue().getAmount();
+                if (totalAmount < current.getType().getMaxStackSize()) {
+                    inventory.setItem(translateSlot(entry.getKey()),
+                            ItemFactory.builder(current).setAmount(totalAmount).build()
+                    );
+                }
+            }
+        }
+        clickEvent.setCancelled(false);
+    }
+
+    private int translateSlot(int slot) {
+        if (slot < 4) {
+            return 39 - slot;   // armor
+        }
+        else if (slot == 4) {
+            return 40;  // offhand
+        }
+        else if (slot < 36) {
+            return slot;    // inventory
+        }
+        else if (slot < 54) {
+            return slot - 36;   // hotbar
+        }
+        return slot;
+    }
+
+    private boolean isInTopInv(int rawSlot, InventoryView view) {
+        return rawSlot < view.getTopInventory().getSize();
+    }
+
     /**
      * Checks if it is a simple click
      *
@@ -214,7 +294,8 @@ class PlayerInventoryPartPane extends AnchorPane {
      */
     static boolean isSimpleClick(InventoryClickEvent event) {
         ClickType type = event.getClick();
-        return (event instanceof BetterClickEvent) || type == ClickType.LEFT || type == ClickType.RIGHT || type == ClickType.MIDDLE;
+        return (event instanceof DragClickEvent) || type == ClickType.LEFT || type == ClickType.RIGHT
+                || type == ClickType.MIDDLE;
     }
 
     /**
