@@ -73,7 +73,7 @@ public class WatchedPlayers {
      *
      * @return All watcher for the given Player
      */
-    Collection<UUID> getWatcher(UUID target) {
+    public Collection<UUID> getWatcher(UUID target) {
         return targetWatcherMap.get(target);
     }
 

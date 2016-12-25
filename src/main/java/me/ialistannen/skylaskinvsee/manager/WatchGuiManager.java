@@ -71,7 +71,7 @@ public class WatchGuiManager implements Listener {
      *
      * @param watcher The {@link UUID} of the watching player
      */
-    private void updateWatchGui(UUID watcher) {
+    public void updateWatchGui(UUID watcher) {
         if (watchGuiMap.containsKey(watcher)) {
             watchGuiMap.get(watcher).updateViewIfTargetOnline();
         }
@@ -86,7 +86,6 @@ public class WatchGuiManager implements Listener {
 
     @EventHandler
     public void onTargetUpdateInventory(InventoryClickEvent event) {
-        System.out.println("Slot: " + event.getSlot());
         updateWatchers(event.getWhoClicked());
     }
 

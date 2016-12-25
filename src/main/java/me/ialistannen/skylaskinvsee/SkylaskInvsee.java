@@ -14,9 +14,10 @@ import com.perceivedev.perceivecore.language.MessageProvider;
 import com.perceivedev.perceivecore.util.DisableManager;
 
 import me.ialistannen.skylaskinvsee.commands.CommandInvsee;
+import me.ialistannen.skylaskinvsee.event.DragListener;
+import me.ialistannen.skylaskinvsee.event.MiscPlayerListener;
 import me.ialistannen.skylaskinvsee.manager.WatchGuiManager;
 import me.ialistannen.skylaskinvsee.manager.WatchedPlayers;
-import me.ialistannen.skylaskinvsee.packet.DragListener;
 
 public class SkylaskInvsee extends JavaPlugin {
 
@@ -42,8 +43,8 @@ public class SkylaskInvsee extends JavaPlugin {
         watchGuiManager = new WatchGuiManager();
         watchedPlayers = new WatchedPlayers();
 
-        DragListener dragListener = new DragListener();
-        Bukkit.getPluginManager().registerEvents(dragListener, this);
+        Bukkit.getPluginManager().registerEvents(new DragListener(), this);
+        Bukkit.getPluginManager().registerEvents(new MiscPlayerListener(), this);
     }
 
     private void reload() {

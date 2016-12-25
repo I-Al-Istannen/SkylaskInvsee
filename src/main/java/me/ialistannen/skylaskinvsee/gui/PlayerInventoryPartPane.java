@@ -26,7 +26,7 @@ import com.perceivedev.perceivecore.gui.util.Dimension;
 import com.perceivedev.perceivecore.util.ItemFactory;
 
 import me.ialistannen.skylaskinvsee.SkylaskInvsee;
-import me.ialistannen.skylaskinvsee.packet.DragClickEvent;
+import me.ialistannen.skylaskinvsee.event.DragClickEvent;
 
 /**
  * A Pane that holds items from the player's inventory

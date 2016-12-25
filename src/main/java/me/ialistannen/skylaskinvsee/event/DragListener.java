@@ -1,4 +1,4 @@
-package me.ialistannen.skylaskinvsee.packet;
+package me.ialistannen.skylaskinvsee.event;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
