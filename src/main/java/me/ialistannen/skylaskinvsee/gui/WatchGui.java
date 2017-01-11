@@ -12,6 +12,7 @@ import com.perceivedev.perceivecore.gui.components.panes.AnchorPane;
 
 import me.ialistannen.skylaskinvsee.SkylaskInvsee;
 import me.ialistannen.skylaskinvsee.manager.WatchedPlayers;
+import me.ialistannen.skylaskinvsee.util.Util;
 
 /**
  * A Gui for watching a Player
@@ -24,6 +25,8 @@ public class WatchGui extends Gui {
 
     private UUID targetPlayer;
     private boolean modifiable;
+
+    private WatcherInventoryHandler watcherInventoryHandler = new WatcherInventoryHandler();
 
     public WatchGui(String name, Player target, boolean modifiable) {
         super(name, 5, new AnchorPane(9, 5));
@@ -44,6 +47,7 @@ public class WatchGui extends Gui {
 
     @Override
     protected void onClose() {
+        super.onClose();
         getPlayerID().ifPresent(watcherID -> {
             WatchedPlayers watchedPlayers = SkylaskInvsee.getInstance().getWatchedPlayers();
             watchedPlayers.removeWatcher(targetPlayer, watcherID);
@@ -60,12 +64,15 @@ public class WatchGui extends Gui {
         }
         super.onClick(event);
 
-        // Allow the player to modify his own inventory, as long as it are just simple clicks :)
-        if (event.isCancelled() && PlayerInventoryPartPane.isSimpleClick(event)) {
-            int slot = event.getRawSlot();
-            if (slot > event.getInventory().getSize()) {
-                event.setCancelled(false);
-            }
+        // let the handler handle clicks in the player inventory
+        if (!Util.isInTopInv(event.getRawSlot(), event.getView())) {
+            getPlayerID().ifPresent(watcherUUID -> {
+                UUID targetUUID = SkylaskInvsee.getInstance().getWatchedPlayers().getTarget(watcherUUID);
+                Player target = Bukkit.getPlayer(targetUUID);
+                if (target != null) {
+                    watcherInventoryHandler.onClick(event, target.getInventory());
+                }
+            });
         }
     }
 

@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.perceivedev.perceivecore.gui.ClickEvent;
@@ -27,6 +28,9 @@ import com.perceivedev.perceivecore.util.ItemFactory;
 
 import me.ialistannen.skylaskinvsee.SkylaskInvsee;
 import me.ialistannen.skylaskinvsee.event.DragClickEvent;
+import me.ialistannen.skylaskinvsee.util.Util;
+
+import static me.ialistannen.skylaskinvsee.util.Util.isItemEmpty;
 
 /**
  * A Pane that holds items from the player's inventory
@@ -103,12 +107,12 @@ class PlayerInventoryPartPane extends AnchorPane {
         button.setAction(clickEvent -> {
             InventoryClickEvent raw = clickEvent.getRaw();
 
-            if (!isSimpleClick(raw)) {
+            if (!Util.isSimpleClick(raw) && !Util.isShiftClick(raw)) {
                 return;
             }
 
             if (raw instanceof DragClickEvent) {
-                handleDrag(clickEvent, ((DragClickEvent) raw).getDragEvent(), button);
+                handleDrag(clickEvent, ((DragClickEvent) raw).getDragEvent());
                 return;
             }
 
@@ -125,6 +129,58 @@ class PlayerInventoryPartPane extends AnchorPane {
             ItemStack cursor = raw.getCursor();
 
             ItemStack currentItem = raw.getCurrentItem();
+
+            // shift clicks from target to watcher!
+            if (Util.isShiftClick(raw)) {
+                if (isItemEmpty(currentItem)) {
+                    // just do nothing
+                    return;
+                }
+                Player player = clickEvent.getPlayer();
+                PlayerInventory watcherInventory = player.getInventory();
+                ItemStack[] contents = watcherInventory.getContents();
+                int amountLeft = currentItem.getAmount();
+                for (ItemStack stack : contents) {
+                    if (isItemEmpty(stack)) {
+                        continue;
+                    }
+
+                    if (stack.isSimilar(currentItem) && stack.getAmount() != stack.getType().getMaxStackSize()) {
+                        int diff = stack.getType().getMaxStackSize() - stack.getAmount();
+                        if (diff >= currentItem.getAmount()) {
+                            amountLeft = 0;
+                            break;
+                        }
+                        else if (currentItem.getAmount() > 0) {
+                            amountLeft -= diff;
+                        }
+                    }
+                }
+                if (amountLeft <= 0) {
+                    // remove the item from the target
+                    inventory.setItem(slot, null);
+                    // well, we placed it on some stack
+                    clickEvent.setCancelled(false);
+                    return;
+                }
+                // so, now look for a free space!
+                int firstEmpty = watcherInventory.firstEmpty();
+                if (firstEmpty < 0) {
+                    // allow them to at least take a part
+                    // clone it to not alter the currentItem, as otherwise the normal event will be bugged
+                    // (The client thinks only the remainder was shifted)
+                    inventory.setItem(slot, ItemFactory.builder(currentItem).setAmount(amountLeft).build());
+
+                    clickEvent.setCancelled(false);
+                    return;
+                }
+                // clear item from target
+                inventory.setItem(slot, null);
+
+                // allow the watcher client to be happy too and process the change
+                clickEvent.setCancelled(false);
+                return;
+            }
 
             // allow retrieving of the item
             if (isItemEmpty(cursor)) {
@@ -219,11 +275,11 @@ class PlayerInventoryPartPane extends AnchorPane {
         return button;
     }
 
-    private void handleDrag(ClickEvent clickEvent, InventoryDragEvent event, Button button) {
+    private void handleDrag(ClickEvent clickEvent, InventoryDragEvent event) {
         InventoryView inventoryView = event.getView();
 
         // only in his inventory
-        if (!isInTopInv(
+        if (!Util.isInTopInv(
                 event.getRawSlots().stream()
                         .mapToInt(Integer::intValue)
                         .min()
@@ -281,37 +337,11 @@ class PlayerInventoryPartPane extends AnchorPane {
         return slot;
     }
 
-    private boolean isInTopInv(int rawSlot, InventoryView view) {
-        return rawSlot < view.getTopInventory().getSize();
-    }
-
-    /**
-     * Checks if it is a simple click
-     *
-     * @param event The {@link InventoryClickEvent} to check
-     *
-     * @return True if it is a simple click
-     */
-    static boolean isSimpleClick(InventoryClickEvent event) {
-        ClickType type = event.getClick();
-        return (event instanceof DragClickEvent) || type == ClickType.LEFT || type == ClickType.RIGHT
-                || type == ClickType.MIDDLE;
-    }
-
     /**
      * Clears this pane
      */
     void clear() {
         Collection<Component> children = new ArrayList<>(getChildren());
         children.forEach(this::removeComponent);
-    }
-
-    /**
-     * @param itemStack The {@link ItemStack} to check
-     *
-     * @return True if the item is null or AIR
-     */
-    boolean isItemEmpty(ItemStack itemStack) {
-        return itemStack == null || itemStack.getType() == Material.AIR;
     }
 }

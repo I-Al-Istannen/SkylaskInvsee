@@ -8,6 +8,7 @@ import com.perceivedev.perceivecore.gui.Gui;
 
 import me.ialistannen.skylaskinvsee.SkylaskInvsee;
 import me.ialistannen.skylaskinvsee.manager.WatchedPlayers;
+import me.ialistannen.skylaskinvsee.util.Util;
 
 /**
  * Injects the Packet listener to players
@@ -31,6 +32,19 @@ public class DragListener implements Listener {
 
         if (!(event.getInventory().getHolder() instanceof Gui)) {
             return;
+        }
+
+        // do not drag between inventories
+        boolean isInTopInv = Util.isInTopInv(event.getRawSlots().iterator().next(), event.getView());
+        for (Integer integer : event.getRawSlots()) {
+            if (!isInTopInv && Util.isInTopInv(integer, event.getView())) {
+                event.setCancelled(true);
+                return;
+            }
+            else if (isInTopInv && !Util.isInTopInv(integer, event.getView())) {
+                event.setCancelled(true);
+                return;
+            }
         }
 
         Gui gui = (Gui) event.getInventory().getHolder();

@@ -65,10 +65,10 @@ class PlayerCraftingPane extends PlayerInventoryPartPane {
         ItemStack item = inventory.getItem(slot);
 
         if (!mayPlayerModifyItem()) {
-            return isItemEmpty(item) ? getItemLabel(new ItemStack(Material.AIR)) : getItemLabel(item);
+            return Util.isItemEmpty(item) ? getItemLabel(new ItemStack(Material.AIR)) : getItemLabel(item);
         }
 
-        if (isItemEmpty(item)) {
+        if (Util.isItemEmpty(item)) {
             return getButton(slot, new ItemStack(Material.AIR));
         }
 
