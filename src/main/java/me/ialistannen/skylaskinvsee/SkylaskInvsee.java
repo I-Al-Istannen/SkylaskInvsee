@@ -11,7 +11,7 @@ import com.perceivedev.perceivecore.command.DefaultCommandExecutor;
 import com.perceivedev.perceivecore.command.DefaultTabCompleter;
 import com.perceivedev.perceivecore.language.I18N;
 import com.perceivedev.perceivecore.language.MessageProvider;
-import com.perceivedev.perceivecore.util.DisableManager;
+import com.perceivedev.perceivecore.utilities.disable.DisableManager;
 
 import me.ialistannen.skylaskinvsee.commands.CommandInvsee;
 import me.ialistannen.skylaskinvsee.event.DragListener;

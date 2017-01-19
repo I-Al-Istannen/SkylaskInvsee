@@ -24,7 +24,7 @@ import com.perceivedev.perceivecore.gui.components.Button;
 import com.perceivedev.perceivecore.gui.components.Label;
 import com.perceivedev.perceivecore.gui.components.panes.AnchorPane;
 import com.perceivedev.perceivecore.gui.util.Dimension;
-import com.perceivedev.perceivecore.util.ItemFactory;
+import com.perceivedev.perceivecore.utilities.item.ItemFactory;
 
 import me.ialistannen.skylaskinvsee.SkylaskInvsee;
 import me.ialistannen.skylaskinvsee.event.DragClickEvent;

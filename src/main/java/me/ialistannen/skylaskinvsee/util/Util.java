@@ -35,7 +35,7 @@ public class Util {
      * @return The translated message
      */
     public static String tr(String key, Object... formattingObjects) {
-        return SkylaskInvsee.getInstance().getLanguage().tr(key, formattingObjects);
+        return SkylaskInvsee.getInstance().getLanguage().translate(key, formattingObjects);
     }
 
     /**

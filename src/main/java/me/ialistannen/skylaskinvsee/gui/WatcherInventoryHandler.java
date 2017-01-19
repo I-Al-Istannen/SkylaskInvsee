@@ -6,7 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.perceivedev.perceivecore.util.ItemFactory;
+import com.perceivedev.perceivecore.utilities.item.ItemFactory;
 
 import me.ialistannen.skylaskinvsee.SkylaskInvsee;
 import me.ialistannen.skylaskinvsee.util.Util;
