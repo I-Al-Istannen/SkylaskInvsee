@@ -7,9 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-import com.perceivedev.perceivecore.gui.Gui;
-import com.perceivedev.perceivecore.gui.components.panes.AnchorPane;
-
+import me.ialistannen.bukkitutilities.gui.Gui;
+import me.ialistannen.bukkitutilities.gui.components.panes.AnchorPane;
 import me.ialistannen.skylaskinvsee.SkylaskInvsee;
 import me.ialistannen.skylaskinvsee.manager.WatchedPlayers;
 import me.ialistannen.skylaskinvsee.util.Util;

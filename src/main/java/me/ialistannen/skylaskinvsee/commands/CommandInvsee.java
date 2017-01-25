@@ -6,11 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 
-import com.perceivedev.perceivecore.command.CommandResult;
-import com.perceivedev.perceivecore.command.CommandSenderType;
-import com.perceivedev.perceivecore.command.TranslatedCommandNode;
-import com.perceivedev.perceivecore.command.argumentmapping.ConvertedParams;
-
+import me.ialistannen.bukkitutilities.command.CommandResult;
+import me.ialistannen.bukkitutilities.command.CommandSenderType;
+import me.ialistannen.bukkitutilities.command.TranslatedCommandNode;
+import me.ialistannen.bukkitutilities.command.argumentmapping.ConvertedParams;
 import me.ialistannen.skylaskinvsee.SkylaskInvsee;
 import me.ialistannen.skylaskinvsee.gui.WatchGui;
 import me.ialistannen.skylaskinvsee.manager.WatchedPlayers;

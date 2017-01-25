@@ -5,7 +5,8 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import com.perceivedev.perceivecore.gui.base.Component;
+import me.ialistannen.bukkitutilities.gui.base.Component;
+
 
 /**
  * A pane displaying the player armor and offhand

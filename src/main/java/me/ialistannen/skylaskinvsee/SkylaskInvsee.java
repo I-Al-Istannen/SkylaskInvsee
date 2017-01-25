@@ -5,14 +5,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.perceivedev.perceivecore.command.AbstractCommandNode;
-import com.perceivedev.perceivecore.command.CommandTree;
-import com.perceivedev.perceivecore.command.DefaultCommandExecutor;
-import com.perceivedev.perceivecore.command.DefaultTabCompleter;
-import com.perceivedev.perceivecore.language.I18N;
-import com.perceivedev.perceivecore.language.MessageProvider;
-import com.perceivedev.perceivecore.utilities.disable.DisableManager;
-
+import me.ialistannen.bukkitutilities.command.AbstractCommandNode;
+import me.ialistannen.bukkitutilities.command.CommandTree;
+import me.ialistannen.bukkitutilities.command.DefaultCommandExecutor;
+import me.ialistannen.bukkitutilities.command.DefaultTabCompleter;
+import me.ialistannen.bukkitutilities.language.I18N;
+import me.ialistannen.bukkitutilities.language.MessageProvider;
+import me.ialistannen.bukkitutilities.modulesystem.ModuleManager;
+import me.ialistannen.bukkitutilities.utilities.disable.DisableManager;
 import me.ialistannen.skylaskinvsee.commands.CommandInvsee;
 import me.ialistannen.skylaskinvsee.event.DragListener;
 import me.ialistannen.skylaskinvsee.event.MiscPlayerListener;
@@ -30,6 +30,11 @@ public class SkylaskInvsee extends JavaPlugin {
     private WatchedPlayers watchedPlayers;
 
     public void onEnable() {
+        if (!ModuleManager.INSTANCE.registerPlugin(this)) {
+            getLogger().severe("Error loading this plugin, see the log from BukkitUtilities!");
+            return;
+        }
+
         instance = this;
         disableManager = new DisableManager(this);
 

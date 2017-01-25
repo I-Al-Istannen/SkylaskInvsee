@@ -9,11 +9,10 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.perceivedev.perceivecore.gui.base.Component;
-import com.perceivedev.perceivecore.gui.components.Label;
-import com.perceivedev.perceivecore.gui.util.Dimension;
-import com.perceivedev.perceivecore.utilities.item.ItemFactory;
-
+import me.ialistannen.bukkitutilities.gui.base.Component;
+import me.ialistannen.bukkitutilities.gui.components.Label;
+import me.ialistannen.bukkitutilities.gui.util.Dimension;
+import me.ialistannen.bukkitutilities.utilities.item.ItemFactory;
 import me.ialistannen.skylaskinvsee.util.Util;
 
 /**

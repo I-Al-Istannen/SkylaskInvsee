@@ -1,6 +1,6 @@
 name: SkylaskInvsee
 version: ${project.version}
 main: me.ialistannen.skylaskinvsee.SkylaskInvsee
-depend: [PerceiveCore]
+depend: ["BukkitUtilities"]
 authors: [I_Al_Istannen]
 description: A small plugin to allow you to view another player's inventory

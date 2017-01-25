@@ -88,19 +88,19 @@
         <!--</dependency>-->
         
         <dependency>
-            <groupId>com.perceivedev</groupId>
+            <groupId>me.ialistannen</groupId>
             <artifactId>Language</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.perceivedev</groupId>
+            <groupId>me.ialistannen</groupId>
             <artifactId>Command</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.perceivedev</groupId>
+            <groupId>me.ialistannen</groupId>
             <artifactId>GUI</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
