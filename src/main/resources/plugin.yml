@@ -4,3 +4,10 @@ main: me.ialistannen.skylaskinvsee.SkylaskInvsee
 depend: ["BukkitUtilities"]
 authors: [I_Al_Istannen]
 description: A small plugin to allow you to view another player's inventory
+
+module:
+  dependencies:
+  - "Gui"
+  - "Command"
+  - "Language"
+  - "Utilities"
